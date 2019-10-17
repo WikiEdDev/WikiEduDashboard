@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency "#{Rails.root}/lib/wiki_pageviews"
+
 class AverageViewsImporter
   DAYS_UNTIL_OUTDATED = 14
   def self.update_outdated_average_views(articles)
@@ -9,8 +11,9 @@ class AverageViewsImporter
     update_average_views(to_update)
   end
 
+  ARTICLES_PER_BATCH = 8
   def self.update_average_views(articles)
-    article_batches = articles.each_slice(30)
+    article_batches = articles.includes(:wiki).each_slice(ARTICLES_PER_BATCH)
     article_batches.each do |batch|
       update_average_views_for_batch batch
     end
