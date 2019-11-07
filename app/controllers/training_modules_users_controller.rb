@@ -1,8 +1,13 @@
-# frozen_string_literal: trues
+# frozen_string_literal: true
 
 class TrainingModulesUsersController < ApplicationController
   respond_to :json
   before_action :require_signed_in
+
+  def index
+    course = Course.find_by(id: params[:course_id])
+    render 'courses/_blocks', locals: { blocks: course.blocks, course: course }
+  end
 
   def create_or_update
     set_slide
@@ -14,10 +19,23 @@ class TrainingModulesUsersController < ApplicationController
     render_slide
   end
 
+  def mark_exercise_complete
+    set_training_module
+    set_training_module_user
+    mark_completion_status(params[:complete])
+
+    block = Block.find(params[:block_id])
+    render 'courses/_block', locals: { block: block, course: block.course }
+  end
+
   private
 
-  def set_slide
+  def set_training_module
     @training_module = TrainingModule.find_by(slug: params[:module_id])
+  end
+
+  def set_slide
+    set_training_module
     @slide = TrainingSlide.find_by(slug: params[:slide_id])
   end
 
@@ -47,5 +65,10 @@ class TrainingModulesUsersController < ApplicationController
 
   def should_set_slide_completed?
     @training_module_user.furthest_slide?(@slide.slug)
+  end
+
+  def mark_completion_status(value)
+    @training_module_user.mark_completion(value)
+    @training_module_user.save
   end
 end

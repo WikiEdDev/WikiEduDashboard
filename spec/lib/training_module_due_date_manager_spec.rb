@@ -48,6 +48,7 @@ describe TrainingModuleDueDateManager do
         it "uses the last day of the block's parent week" do
           expect(subject).to eq(expected)
         end
+
         it 'is a Saturday, since weeks run Sun-Sat' do
           expect(subject.saturday?).to eq(true)
         end
@@ -111,6 +112,18 @@ describe TrainingModuleDueDateManager do
 
         it 'returns true' do
           expect(subject).to eq(true)
+        end
+      end
+
+      context 'training module is not of kind TRAINING' do
+        let(:due_date) { 1.week.ago.to_date }
+
+        before { t_module.update(kind: TrainingModule::Kinds::EXERCISE) }
+
+        after { t_module.update(kind: TrainingModule::Kinds::TRAINING) }
+
+        it 'returns false' do
+          expect(subject).to eq(false)
         end
       end
     end

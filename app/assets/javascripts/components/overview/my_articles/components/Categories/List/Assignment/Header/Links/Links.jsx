@@ -6,12 +6,12 @@ import BibliographyLink from './BibliographyLink';
 import SandboxLink from './SandboxLink';
 import PeerReviewLink from './PeerReviewLink';
 import EditorLink from './EditorLink';
-import ReviewerLink from '../../../../../../common/ReviewerLink';
+import ReviewerLink from './ReviewerLink';
 
-import Separator from '../../../../../../common/Separator';
+import Separator from '@components/overview/my_articles/common/Separator.jsx';
 
 // constants
-import { REVIEWING_ROLE } from '../../../../../../../../../constants/assignments';
+import { REVIEWING_ROLE } from '~/app/assets/javascripts/constants/assignments';
 
 // helper functions
 const interleaveSeparators = (acc, link, index, collection) => {
